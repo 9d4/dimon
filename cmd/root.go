@@ -3,15 +3,30 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"path"
 
+	"github.com/9d4/dimon/daemon"
 	"github.com/spf13/cobra"
+	v "github.com/spf13/viper"
 )
 
 var rootCmd = &cobra.Command{
 	Short: "dimon",
 	Long:  "dimon is a simple daemon to run any command as background process",
 	Use:   "dimon",
-	Run:   func(cmd *cobra.Command, args []string) {},
+	Run: func(cmd *cobra.Command, args []string) {
+		daemon.Start()
+	},
+}
+
+func init() {
+	initConfig()
+}
+
+func initConfig() {
+	v.SetDefault("socketdir", "/var/run/dimon/")
+	v.SetDefault("socketpath", path.Join(v.GetString("socketdir"), "sock"))
+	v.SetDefault("socketmask", 0666)
 }
 
 func Execute() {
