@@ -7,6 +7,7 @@ import (
 
 	"github.com/9d4/dimon/server"
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	v "github.com/spf13/viper"
 )
 
@@ -14,6 +15,9 @@ var rootCmd = &cobra.Command{
 	Short: "dimon",
 	Long:  "dimon is a simple daemon to run any command as background process",
 	Use:   "dimon",
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		bindPFlagsViper(cmd.Flags())
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		server.Start()
 	},
@@ -21,12 +25,17 @@ var rootCmd = &cobra.Command{
 
 func init() {
 	initConfig()
+
+	rootCmd.PersistentFlags().String("socketpath", path.Join(v.GetString("socketdir"), "sock"), "where the socket will listen on")
 }
 
 func initConfig() {
 	v.SetDefault("socketdir", "/var/run/dimon/")
-	v.SetDefault("socketpath", path.Join(v.GetString("socketdir"), "sock"))
 	v.SetDefault("socketmask", 0666)
+}
+
+func bindPFlagsViper(flags *pflag.FlagSet) {
+	v.BindPFlags(flags)
 }
 
 func Execute() {
