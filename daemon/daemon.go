@@ -13,8 +13,7 @@ func quickSetup() {
 	err := os.MkdirAll(v.GetString("socketdir"), os.ModePerm)
 	checkErr(err)
 
-	err = os.Remove(v.GetString("socketpath"))
-	checkErr(err)
+	os.Remove(v.GetString("socketpath"))
 }
 
 func listenSocket() {
