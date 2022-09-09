@@ -1,11 +1,11 @@
 package daemon
 
 import (
-	"bufio"
 	"log"
 	"net"
 	"os"
 
+	"github.com/9d4/dimon/server"
 	v "github.com/spf13/viper"
 )
 
@@ -24,24 +24,7 @@ func listenSocket() {
 	checkErr(err)
 
 	log.Println("Listening in", listener.Addr().String())
-
-	for {
-		go handleConn(listener.Accept())
-	}
-}
-
-func handleConn(conn net.Conn, err error) {
-	bufreader := bufio.NewReader(conn)
-
-	for {
-		conn.Write([]byte(">>> "))
-
-		_, err := bufreader.ReadBytes('\n')
-		if err != nil {
-			conn.Close()
-			break
-		}
-	}
+	server.Serve(listener)
 }
 
 func checkErr(err error) {
