@@ -27,6 +27,7 @@ func init() {
 	initConfig()
 
 	rootCmd.PersistentFlags().String("socketpath", path.Join(v.GetString("socketdir"), "sock"), "where the socket will listen on")
+	rootCmd.PersistentFlags().MarkHidden("socketpath")
 }
 
 func initConfig() {
