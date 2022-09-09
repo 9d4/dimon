@@ -1,11 +1,14 @@
 package task
 
-import "os/exec"
+import (
+	"os/exec"
+)
 
 type Task struct {
-	Name    string
-	Command string
-	Args    []string
+	ID      int      `json:"id"`
+	Name    string   `json:"name"`
+	Command string   `json:"command"`
+	Args    []string `json:"args"`
 }
 
 func NewTask() *Task {
