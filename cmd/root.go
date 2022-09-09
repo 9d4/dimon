@@ -5,7 +5,7 @@ import (
 	"os"
 	"path"
 
-	"github.com/9d4/dimon/daemon"
+	"github.com/9d4/dimon/server"
 	"github.com/spf13/cobra"
 	v "github.com/spf13/viper"
 )
@@ -15,7 +15,7 @@ var rootCmd = &cobra.Command{
 	Long:  "dimon is a simple daemon to run any command as background process",
 	Use:   "dimon",
 	Run: func(cmd *cobra.Command, args []string) {
-		daemon.Start()
+		server.Start()
 	},
 }
 
