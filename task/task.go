@@ -9,13 +9,23 @@ type Task struct {
 	Name    string   `json:"name"`
 	Command string   `json:"command"`
 	Args    []string `json:"args"`
+
+	cmd *exec.Cmd
 }
 
-func NewTask() *Task {
-	return &Task{}
+func NewTask(name, command string, args ...string) *Task {
+	return &Task{
+		Name:    name,
+		Command: command,
+		Args:    args,
+		cmd:     parseCommandArgs(command, args),
+	}
+}
+
+func parseCommandArgs(command string, args []string) *exec.Cmd {
+	return exec.Command(command, args...)
 }
 
 func (t *Task) Run() error {
-	exc := exec.Command(t.Command, t.Args...)
-	return exc.Run()
+	return t.cmd.Run()
 }
