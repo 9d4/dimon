@@ -1,3 +1,6 @@
+.PHONY: dev
+dev: | build runbindev
+
 .PHONY: start
 start: | build runbin
 
@@ -8,3 +11,7 @@ build:
 .PHONY: runbin
 runbin:
 	sudo ./dimon
+
+.PHONY: runbindev
+runbindev:
+	./dimon --socketpath dimon.sock -d dimon.db
