@@ -2,10 +2,12 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path"
 
 	"github.com/9d4/dimon/server"
+	"github.com/9d4/dimon/storage"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	v "github.com/spf13/viper"
@@ -17,6 +19,11 @@ var rootCmd = &cobra.Command{
 	Use:   "dimon",
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		bindPFlagsViper(cmd.Flags())
+
+		err := storage.Initialize(v.GetString("database"))
+		if err != nil {
+			log.Fatal(err)
+		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		server.Start()
