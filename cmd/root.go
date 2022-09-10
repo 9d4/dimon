@@ -27,7 +27,9 @@ func init() {
 	initConfig()
 
 	rootCmd.PersistentFlags().String("socketpath", path.Join(v.GetString("socketdir"), "sock"), "where the socket will listen on")
+	rootCmd.PersistentFlags().StringP("database", "d", "/var/lib/dimon/dimon.db", "database path of dimon")
 	rootCmd.PersistentFlags().MarkHidden("socketpath")
+	rootCmd.PersistentFlags().MarkHidden("database")
 }
 
 func initConfig() {
