@@ -1,16 +1,65 @@
 package server
 
 import (
+	"encoding/json"
+	"io"
 	"log"
 	"net"
 	"net/http"
 	"os"
 
+	"github.com/9d4/dimon/storage"
+	"github.com/9d4/dimon/task"
 	"github.com/gorilla/mux"
 	v "github.com/spf13/viper"
 )
 
 var router *mux.Router = mux.NewRouter()
+
+func init() {
+	router.HandleFunc("/tasks", func(w http.ResponseWriter, r *http.Request) {
+		body, err := io.ReadAll(r.Body)
+		if err != nil {
+			w.WriteHeader(400)
+			w.Write([]byte{})
+		}
+
+		var t task.Task
+		err = json.Unmarshal(body, &t)
+		if err != nil {
+			return
+		}
+
+		taskStore := task.NewStore(storage.GetDB())
+		err = taskStore.Save(&t)
+		if err != nil {
+			w.WriteHeader(500)
+			w.Write([]byte("Unable to create new task"))
+			log.Println(err)
+			return
+		}
+
+		w.WriteHeader(201)
+	}).Methods("POST")
+
+	router.HandleFunc("/tasks", func(w http.ResponseWriter, r *http.Request) {
+		taskStore := task.NewStore(storage.GetDB())
+		tasks, err := taskStore.GetAll()
+		if err != nil {
+			w.WriteHeader(500)
+			return
+		}
+
+		tasksJson, err := json.Marshal(tasks)
+		if err != nil {
+			w.WriteHeader(500)
+			return
+		}
+
+		w.WriteHeader(200)
+		w.Write(tasksJson)
+	})
+}
 
 func quickSetup() {
 	err := os.MkdirAll(v.GetString("socketdir"), os.ModePerm)

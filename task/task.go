@@ -5,7 +5,7 @@ import (
 )
 
 type Task struct {
-	ID      int      `json:"id"`
+	ID      int      `json:"id" storm:"id,increment"`
 	Name    string   `json:"name"`
 	Command string   `json:"command"`
 	Args    []string `json:"args"`
