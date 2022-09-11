@@ -8,8 +8,10 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 
+	"github.com/9d4/dimon/process"
 	"github.com/9d4/dimon/storage"
 	"github.com/9d4/dimon/task"
 	"github.com/gorilla/mux"
@@ -61,6 +63,48 @@ func init() {
 		w.WriteHeader(200)
 		w.Write(tasksJson)
 	})
+
+	router.HandleFunc("/tasks/{taskid}/run", func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+
+		taskID, err := strconv.Atoi(vars["taskid"])
+		if err != nil {
+			w.WriteHeader(400)
+			return
+		}
+
+		task, err := (task.NewStore(storage.GetDB())).Get(taskID)
+		if err != nil {
+			w.WriteHeader(404)
+			return
+		}
+
+		// create new process based on selected task
+		proc := process.NewProcess(taskID, task.Command, task.Args...)
+		process.SaveProcess(proc)
+
+		proc.Start()
+
+		buf, err := json.Marshal(task)
+		if err != nil {
+			w.WriteHeader(500)
+		}
+
+		w.WriteHeader(200)
+		w.Write(buf)
+	}).Methods("POST")
+
+	router.HandleFunc("/processes", func(w http.ResponseWriter, r *http.Request) {
+		procs := process.GetAll()
+		buf, err := json.Marshal(procs)
+		if err != nil {
+			w.WriteHeader(500)
+			return
+		}
+
+		w.WriteHeader(200)
+		w.Write(buf)
+	}).Methods("GET")
 }
 
 func quickSetup() {

@@ -6,12 +6,12 @@ import (
 )
 
 func TestNewProcess(t *testing.T) {
-	NewProcess("ls", "-lah")
+	NewProcess(0, "ls", "-lah")
 }
 
 func TestProcessRun(t *testing.T) {
 	buf := bytes.NewBufferString("")
-	p := NewProcess("echo", "ABC")
+	p := NewProcess(0, "echo", "ABC")
 	p.Cmd.Stdout = buf
 	p.Run()
 
@@ -27,7 +27,7 @@ func TestProcessRun(t *testing.T) {
 func TestProcessKill(t *testing.T) {
 	buf := bytes.NewBufferString("")
 
-	p := NewProcess("sleep", "10")
+	p := NewProcess(0, "sleep", "10")
 	p.Cmd.Stdout = buf
 
 	err := p.Start()

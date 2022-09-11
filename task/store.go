@@ -21,6 +21,11 @@ func (t Store) GetAll() ([]*Task, error) {
 	return tasks, err
 }
 
+func (t Store) Get(id int) (*Task, error) {
+	var task Task
+	return &task, t.db.One("ID", id, &task)
+}
+
 func (t Store) Save(task *Task) error {
 	return t.db.Save(task)
 }

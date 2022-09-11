@@ -7,12 +7,14 @@ import (
 
 // Process is wrapper for os/exec. Process used to run process as background process.
 type Process struct {
-	Cmd *exec.Cmd
+	TaskID int `json:"taskID"`
+	Cmd    *exec.Cmd
 }
 
-func NewProcess(command string, args ...string) *Process {
+func NewProcess(taskid int, command string, args ...string) *Process {
 	p := &Process{
-		Cmd: parseCommandArgs(command, args),
+		TaskID: taskid,
+		Cmd:    parseCommandArgs(command, args),
 	}
 	p.Cmd.Stdout = os.Stdout
 	return p

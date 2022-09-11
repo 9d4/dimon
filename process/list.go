@@ -6,3 +6,7 @@ var processes []*Process
 func SaveProcess(p *Process) {
 	processes = append(processes, p)
 }
+
+func GetAll() []*Process {
+	return processes
+}
