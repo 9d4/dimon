@@ -1,0 +1,11 @@
+[Unit]
+Description=The Dimon Daemon
+
+[Service]
+User=root
+WorkingDirectory=/usr/lib/dimon
+ExecStart=/usr/bin/dimon
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
