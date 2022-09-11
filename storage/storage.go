@@ -16,3 +16,7 @@ func Initialize(path string) error {
 	db = d
 	return err
 }
+
+func Close() {
+	db.Close()
+}

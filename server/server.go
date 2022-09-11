@@ -7,6 +7,8 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/9d4/dimon/storage"
 	"github.com/9d4/dimon/task"
@@ -75,6 +77,10 @@ func listenSocket() {
 	err = os.Chmod(v.GetString("socketpath"), os.FileMode(v.GetInt32("socketmask")))
 	checkErr(err)
 
+	var sigc = make(chan os.Signal, 1)
+	signal.Notify(sigc, os.Interrupt, syscall.SIGTERM)
+	go Shutdown(sigc, listener)
+
 	log.Println("Listening in", listener.Addr().String())
 	Serve(listener)
 }
@@ -93,4 +99,11 @@ func Start() {
 
 func Serve(conn net.Listener) {
 	http.Serve(conn, router)
+}
+
+func Shutdown(sig chan os.Signal, conn net.Listener) {
+	log.Printf("Caught signal %s: shutting down", <-sig)
+	storage.Close()
+	conn.Close()
+	os.Exit(0)
 }
