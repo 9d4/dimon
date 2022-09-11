@@ -17,7 +17,7 @@ var rootCmd = &cobra.Command{
 	Short: "dimon",
 	Long:  "dimon is a simple daemon to run any command as background process",
 	Use:   "dimon",
-	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+	PreRun: func(cmd *cobra.Command, args []string) {
 		bindPFlagsViper(cmd.Flags())
 
 		err := storage.Initialize(v.GetString("database"))
