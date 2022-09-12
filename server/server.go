@@ -108,8 +108,10 @@ func init() {
 }
 
 func quickSetup() {
-	err := os.MkdirAll(v.GetString("socketdir"), os.ModePerm)
-	checkErr(err)
+	if _, err := os.Stat(v.GetString("socketpath")); os.IsNotExist(err) {
+		err := os.MkdirAll(v.GetString("socketpath"), os.ModePerm)
+		checkErr(err)
+	}
 
 	os.Remove(v.GetString("socketpath"))
 }
