@@ -27,7 +27,6 @@ type Client struct {
 
 func NewClient() *Client {
 	var host = v.GetString("socketpath")
-	fmt.Println(host)
 
 	return &Client{
 		host: host,
@@ -134,4 +133,12 @@ func (cli *Client) doRequest(ctx context.Context, req *http.Request) (serverResp
 	}
 
 	return serverResp, err
+}
+
+func ensureReaderClosed(response serverResponse) {
+	if response.body != nil {
+		// Drain up to 512 bytes and close the body to let the Transport reuse the connection
+		io.CopyN(io.Discard, response.body, 512)
+		response.body.Close()
+	}
 }
