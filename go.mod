@@ -6,6 +6,7 @@ require github.com/spf13/cobra v1.5.0
 
 require (
 	github.com/asdine/storm/v3 v3.2.1 // indirect
+	github.com/sirupsen/logrus v1.9.0 // indirect
 	go.etcd.io/bbolt v1.3.4 // indirect
 )
 

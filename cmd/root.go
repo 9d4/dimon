@@ -33,6 +33,8 @@ var rootCmd = &cobra.Command{
 func init() {
 	initConfig()
 
+	rootCmd.AddCommand(psCmd)
+
 	rootCmd.PersistentFlags().String("socketpath", path.Join("/var/run/dimon/dimon.sock"), "where the socket will listen on")
 	rootCmd.PersistentFlags().StringP("database", "d", "/var/lib/dimon/dimon.db", "database path of dimon")
 	rootCmd.PersistentFlags().MarkHidden("socketpath")
