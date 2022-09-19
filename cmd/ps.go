@@ -24,7 +24,7 @@ var psCmd = &cobra.Command{
 		tw := tabwriter.NewWriter(os.Stdout, 4, 1, 4, 0x20, 0)
 		defer tw.Flush()
 
-		fmt.Fprintln(tw, "ID\tStatus\tTask\tRun")
+		fmt.Fprintln(tw, "ID\tPID\tStatus\tTask\tRun")
 
 		for i, p := range processes {
 			if err != nil {
@@ -36,7 +36,7 @@ var psCmd = &cobra.Command{
 				running = "Exited"
 			}
 
-			fmt.Fprintf(tw, "%d\t%s\t%v\t%v\n", i, running, p.Task.Name, p.Run)
+			fmt.Fprintf(tw, "%d\t%d\t%s\t%v\t%v\n", i, p.PID, running, p.Task.Name, p.Run)
 		}
 	}),
 }

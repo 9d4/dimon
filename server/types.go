@@ -16,4 +16,7 @@ type Process struct {
 
 	// Determines running or not
 	Status bool
+
+	// PID
+	PID int
 }

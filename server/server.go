@@ -113,6 +113,7 @@ func init() {
 			cp.Task = *t
 			cp.Run = fmt.Sprintf("%s %s", t.Name, strings.Join(t.Args, " "))
 			cp.Status = p.IsRunning()
+			cp.PID = p.Cmd.Process.Pid
 
 			custProcs = append(custProcs, cp)
 		}
