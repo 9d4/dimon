@@ -56,7 +56,15 @@ func init() {
 			return
 		}
 
-		tasksJson, err := json.Marshal(tasks)
+		var custTasks []Task
+		for _, t := range tasks {
+			var ta Task
+			ta.Task = *t
+			ta.Command = fmt.Sprintf("%s %s", t.Command, strings.Join(t.Args, ""))
+			custTasks = append(custTasks, ta)
+		}
+
+		tasksJson, err := json.Marshal(custTasks)
 		if err != nil {
 			w.WriteHeader(500)
 			return

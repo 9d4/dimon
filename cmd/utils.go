@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"os"
+	"text/tabwriter"
+
 	"github.com/spf13/cobra"
 )
 
@@ -11,4 +14,8 @@ func wrapCobraFunc(fn func(cmd *cobra.Command, args []string)) cobraFunc {
 		bindPFlagsViper(cmd.Flags())
 		fn(cmd, args)
 	}
+}
+
+func newTabWriter() *tabwriter.Writer {
+	return tabwriter.NewWriter(os.Stdout, 4, 1, 4, 0x20, 0)
 }

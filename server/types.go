@@ -20,3 +20,11 @@ type Process struct {
 	// PID
 	PID int
 }
+
+// wrapper task.Task
+type Task struct {
+	task.Task
+
+	// Command with args
+	CommandArgs string `json:"commandargs"`
+}
