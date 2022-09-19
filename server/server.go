@@ -60,7 +60,7 @@ func init() {
 		for _, t := range tasks {
 			var ta Task
 			ta.Task = *t
-			ta.Command = fmt.Sprintf("%s %s", t.Command, strings.Join(t.Args, ""))
+			ta.CommandArgs = fmt.Sprintf("%s %s", t.Command, strings.Join(t.Args, ""))
 			custTasks = append(custTasks, ta)
 		}
 

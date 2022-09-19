@@ -15,7 +15,7 @@ var taskListCmd = &cobra.Command{
 	Short:   "show task list",
 	Run: wrapCobraFunc(func(cmd *cobra.Command, args []string) {
 		cli := client.NewClient()
-		_, err := cli.TaskList(context.Background())
+		tasks, err := cli.TaskList(context.Background())
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -24,8 +24,8 @@ var taskListCmd = &cobra.Command{
 		defer tw.Flush()
 
 		fmt.Fprintln(tw, "ID\tName\tCommand")
-		// for _, t := range tasks {
-		// 	fmt.Fprintf(tw, "%d\t%s\t%s", t.ID, t.Name, t.CommandArgs)
-		// }
+		for _, t := range tasks {
+			fmt.Fprintf(tw, "%d\t%s\t%s\n", t.ID, t.Name, t.CommandArgs)
+		}
 	}),
 }
