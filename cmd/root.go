@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"path"
@@ -34,6 +33,7 @@ func init() {
 	initConfig()
 
 	rootCmd.AddCommand(psCmd)
+	rootCmd.AddCommand(taskCmd)
 
 	rootCmd.PersistentFlags().String("socketpath", path.Join("/var/run/dimon/dimon.sock"), "where the socket will listen on")
 	rootCmd.PersistentFlags().StringP("database", "d", "/var/lib/dimon/dimon.db", "database path of dimon")
@@ -51,7 +51,6 @@ func bindPFlagsViper(flags *pflag.FlagSet) {
 
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
 		os.Exit(1)
 	}
 }
