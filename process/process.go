@@ -7,8 +7,8 @@ import (
 
 // Process is wrapper for os/exec. Process used to run process as background process.
 type Process struct {
-	TaskID int `json:"taskID"`
-	Cmd    *exec.Cmd
+	TaskID int       `json:"taskID"`
+	Cmd    *exec.Cmd `json:"-"`
 }
 
 func NewProcess(taskid int, command string, args ...string) *Process {
@@ -33,7 +33,11 @@ func (p *Process) Kill() error {
 }
 
 func (p *Process) IsRunning() bool {
-	return !p.Cmd.ProcessState.Exited()
+	if p.Cmd.ProcessState != nil {
+		return !p.Cmd.ProcessState.Exited()
+	}
+
+	return true
 }
 
 func parseCommandArgs(command string, args []string) *exec.Cmd {

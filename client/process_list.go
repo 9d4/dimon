@@ -3,19 +3,22 @@ package client
 import (
 	"context"
 	"encoding/json"
-	"log"
 
-	"github.com/9d4/dimon/process"
+	"github.com/9d4/dimon/server"
 )
 
-func (cli *Client) ProcessList(ctx context.Context) ([]process.Process, error) {
+func (cli *Client) ProcessList(ctx context.Context) ([]server.Process, error) {
 	resp, err := cli.get(ctx, "/processes", nil, nil)
 	defer ensureReaderClosed(resp)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
-	var process []process.Process
-	err = json.NewDecoder(resp.body).Decode(&process)
-	return process, err
+	var processes []server.Process
+	err = json.NewDecoder(resp.body).Decode(&processes)
+	if err != nil {
+		return nil, err
+	}
+
+	return processes, err
 }

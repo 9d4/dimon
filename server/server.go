@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net"
@@ -9,6 +10,7 @@ import (
 	"os"
 	"os/signal"
 	"strconv"
+	"strings"
 	"syscall"
 
 	"github.com/9d4/dimon/process"
@@ -96,7 +98,26 @@ func init() {
 
 	router.HandleFunc("/processes", func(w http.ResponseWriter, r *http.Request) {
 		procs := process.GetAll()
-		buf, err := json.Marshal(procs)
+
+		var custProcs []Process
+		taskStore := task.NewStore(storage.GetDB())
+
+		for _, p := range procs {
+			var cp Process
+
+			t, err := taskStore.Get(p.TaskID)
+			if err != nil {
+				continue
+			}
+
+			cp.Task = *t
+			cp.Run = fmt.Sprintf("%s %s", t.Name, strings.Join(t.Args, " "))
+			cp.Status = p.IsRunning()
+
+			custProcs = append(custProcs, cp)
+		}
+
+		buf, err := json.Marshal(custProcs)
 		if err != nil {
 			w.WriteHeader(500)
 			return
