@@ -74,7 +74,7 @@ func init() {
 		w.Write(tasksJson)
 	})
 
-	router.HandleFunc("/tasks/{taskid}/run", func(w http.ResponseWriter, r *http.Request) {
+	router.HandleFunc("/tasks/{taskid}", func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 
 		taskID, err := strconv.Atoi(vars["taskid"])

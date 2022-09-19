@@ -48,6 +48,15 @@ func (cli *Client) get(ctx context.Context, path string, query url.Values, heade
 	return cli.sendRequest(ctx, http.MethodGet, path, query, nil, headers)
 }
 
+func (cli *Client) post(ctx context.Context, path string, query url.Values, obj interface{}, headers map[string][]string) (serverResponse, error) {
+	body, headers, err := encodeBody(obj, headers)
+	if err != nil {
+		return serverResponse{}, err
+	}
+
+	return cli.sendRequest(ctx, http.MethodPost, path, query, body, headers)
+}
+
 type serverResponse struct {
 	body       io.ReadCloser
 	header     http.Header
