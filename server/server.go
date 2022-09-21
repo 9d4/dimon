@@ -36,6 +36,17 @@ func init() {
 			return
 		}
 
+		// validate
+		if t.Name == "" {
+			w.WriteHeader(400)
+			return
+		}
+
+		if t.Command == "" {
+			w.WriteHeader(400)
+			return
+		}
+
 		taskStore := task.NewStore(storage.GetDB())
 		err = taskStore.Save(&t)
 		if err != nil {
@@ -46,6 +57,7 @@ func init() {
 		}
 
 		w.WriteHeader(201)
+		w.Write(body)
 	}).Methods("POST")
 
 	router.HandleFunc("/tasks", func(w http.ResponseWriter, r *http.Request) {
